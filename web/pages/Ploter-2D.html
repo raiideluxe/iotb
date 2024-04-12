@@ -1,0 +1,214 @@
+{% extends "index.html" %}
+
+{% block ploter %}
+<style>
+    .container-ploter {
+        display: flex;
+        flex-direction: row;
+        /* padding: 20px; */
+        align-content: flex-start;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-top: -50px;
+        margin-bottom: 50px;
+    }
+    .formulaInput {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+    #graphContainer {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+    canvas {
+        border: 1px solid #ddd;
+        width: 100%;
+        max-width: 100%;
+    }
+</style>
+<div class="container-ploter">
+    <div
+    style="    background-color: white;
+    border-radius: 4px;
+    padding: 10px;
+    /* margin-left: -20px; */
+    height: 100%;
+    min-height: 100%;
+    width: 20%;"
+    
+    >
+        <div id="inputPlot">
+            <div id="plotProperty1">
+            <input type="text" id="formulaInput" class="formulaInput" placeholder="Введите формулу или число" autofocus>
+            <input type="color" id="colorInput" value="#75c0c0">
+            <!-- <button id="toggleGraph">Включить график</button> -->
+            <input type="checkbox" id="toggleGraphCheckbox" checked></div>
+        </div>
+        <!-- <button type="button" id="addPlot" style="margin-top:10px">Добавить график</button> -->
+    </div>
+    <div id="graphContainer">
+        <canvas id="graphCanvas"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.4/math.min.js"></script>
+<script>
+    const formulaInput = document.getElementById('formulaInput');
+    const colorInput = document.getElementById('colorInput');
+    const toggleGraphButton = document.getElementById('toggleGraphCheckbox');
+    isGraphEnabled = toggleGraphButton.checked
+    const graphCanvas = document.getElementById('graphCanvas');
+    const ctx = graphCanvas.getContext('2d');
+
+    let chart;
+
+    function updateGraph() {
+        const points = [];
+        const datasets_plot = []
+        const formula = formulaInput.value.trim();
+        if (!formula) return;
+
+        // Если график отключен, очищаем канвас и удаляем график
+        if (!isGraphEnabled) {
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+            ctx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            return;
+            }
+
+            // Создаем массив точек для графика
+            for (let x = -10; x <= 10; x += 0.1) {
+                let y;
+                try {
+                    // Если формула - число, то y равно этому числу
+                    y = parseFloat(formula);
+                    if (isNaN(y)) throw new Error();
+                } catch (e) {
+                    // Если формула - функция, то вычисляем y
+                    const compiledFunction = math.compile(formula);
+                    y = compiledFunction.evaluate({ x: x });
+                }
+                points.push({ x, y });
+            }
+
+            // Настраиваем график
+            if (chart) {
+                chart.data.datasets[0].data = points;
+                chart.data.datasets[0].backgroundColor = colorInput.value;
+                chart.data.datasets[0].borderColor = colorInput.value;
+                chart.update();
+            } else {
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    // showLine: true,
+                    data: {
+                        datasets:[{
+                            label: formula,
+                            data: points,
+                            backgroundColor: colorInput.value,
+                            borderColor: colorInput.value,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                suggestedMin: -10,
+                                suggestedMax: 10
+                            },
+                            y: {
+                                type: 'linear',
+                                position: 'left',
+                                suggestedMin: -10,
+                                suggestedMax: 10
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    // Обработчик события для кнопки включения/выключения графика
+
+    toggleGraphButton.addEventListener('change', function() {
+        console.log(this.checked);
+        isGraphEnabled = this.checked;
+        updateGraph();
+    });
+
+    // Обработчик события для выбора цвета графика
+    colorInput.addEventListener('input', function() {
+        if (isGraphEnabled) {
+            updateGraph();
+        }
+    });
+
+    // Обновляем график при изменении значения в поле ввода
+    formulaInput.addEventListener('input', function() {
+        if (isGraphEnabled) {
+            updateGraph();
+        }
+    });
+
+    let plotCounter = 2; // Инициализируем счетчик
+
+    document.getElementById('addPlot').addEventListener('click', function() {
+        var plotContainer = document.getElementById('inputPlot');
+
+        // Создаем новый div для графика
+        var newPlotDiv = document.createElement('div');
+        newPlotDiv.className = 'plot';
+
+        // Создаем поля ввода формулы, цвета и чекбокс
+        var newFormulaInput = document.createElement('input');
+        newFormulaInput.type = 'text';
+        newFormulaInput.placeholder = 'Введите формулу или число';
+        newFormulaInput.autofocus = true;
+        newFormulaInput.classList.add('formulaInput');
+
+        var newColorInput = document.createElement('input');
+        newColorInput.type = 'color';
+        newColorInput.value = `#${randColor()}`; // Генерируем случайный цвет
+
+        var newToggleGraphCheckbox = document.createElement('input');
+        newToggleGraphCheckbox.type = 'checkbox';
+        newToggleGraphCheckbox.checked = true;
+
+        // Создаем новый div для свойства графика
+        var newPlotPropertyDiv = document.createElement('div');
+        newPlotPropertyDiv.id = `plotProperty${plotCounter}`; // Уникальный идентификатор для каждого plotProperty
+
+        // Добавляем поля ввода в новый div
+        newPlotPropertyDiv.appendChild(newFormulaInput);
+        newPlotPropertyDiv.appendChild(newColorInput);
+        newPlotPropertyDiv.appendChild(newToggleGraphCheckbox);
+
+        // Добавляем новый div в контейнер графиков
+        newPlotDiv.appendChild(newPlotPropertyDiv);
+        plotContainer.appendChild(newPlotDiv);
+
+        plotCounter++; // Увеличиваем счетчик
+        newFormulaInput.addEventListener('input', updateGraph);
+
+        newColorInput.addEventListener('input', updateGraph);
+        newToggleGraphCheckbox.addEventListener('change', function() {
+            isGraphEnabled = this.checked;
+            updateGraph();
+        });
+    });
+    function randColor(){
+        return Math.floor(Math.random()*16777215).toString(16);
+    }
+    // Инициализация графика при загрузке страницы
+    // updateGraph();
+</script>
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends "index.html" %}
+
+{% block content %}
+<style>
+    #searchInput {
+        width: 80%;
+        padding: 10px;
+        margin-left: 45px;
+        font-size: 16px;
+        border: 2px solid gray;
+        border-radius: 6px;
+        transition: border-color 0.3s ease;
+        margin-bottom: 10px;
+    }
+
+    #searchInput:focus {
+        outline: none;
+        border-color: #66afe9;
+        box-shadow: 0 0 5px #66afe9;
+    }
+</style>
+<div class="container">
+    <h2 style="margin-left: 45px;">Библиотека конастант</h2>
+    <input type="text" id="searchInput" placeholder="Начни вводить...">
+    <hr>
+    <ul id="constantsList">
+
+    </ul>
+
+    <script>
+        const constants = [
+            {
+                "name": " π",
+                "value": "3,1416",
+                "description": "Число Пи (Pi)",
+                "theme": "математика",
+            },
+            {
+                "name": "e",
+                "value": "2,7183",
+                "description": "Число е, число Эйлера",
+                "theme": "математика",
+            },
+            {
+                "name": "g",
+                "value": "9,81 м/с^2",
+                "description": "Ускорение свободного падения",
+                "theme": "физика",
+            },
+            {
+                "name": "с",
+                "description": "Скорость света в вакууме",
+                "value": "3*10^8 м/с",
+                "theme": "физика",
+            },
+            {
+                "name": "me",
+                "description": "Масса электрона",
+                "value": "0,910938188(72)*10^−30 кг",
+                "theme": "физика",
+            },
+            {
+                "name": "mp",
+                "description": "Масса протона",
+                "value": "1,67262158(13)*10^−27 кг",
+                "theme": "физика",
+            },
+            {
+                "name": "mn",
+                "description": "Масса нейтрона",
+                "value": "1,67492716(13)*10^−27 кг",
+                "theme": "физика",
+            },
+            {
+                "name": "h",
+                "description": "Постоянная планка",
+                "value": "6,62606876(52)*10^−34 Дж*с",
+                "theme": "физика",
+            },
+            {
+                "name": "k",
+                "description": "Постоянная Больцмана",
+                "value": "1,381*10^-23 Дж/К",
+                "theme": "химия",
+            },
+            {
+                "name": "N(a)",
+                "description": "Постоянная Авогадро",
+                "value": "6,02214199(47)*10^23 моль^−1",
+                "theme": "химия",
+            },
+            {
+                "name": "1 а.е.м.",
+                "description": "Атомная единица массы",
+                "value": "1,66053873(13)*10^−27 кг",
+                "theme": "химия физика",
+            },
+            {
+                "name": "R",
+                "description": "Универсальная газовая постоянная",
+                "value": "8,314472 моль*К/моль*К",
+                "theme": "физика"
+            },
+            {
+                "name": "F",
+                "description": "Постоянная Фаренгейта",
+                "value": "255,372222 кельвин",
+                "theme": "физика"
+            },
+            {
+                "name": "eV",
+                "description": "Электрон-вольт",
+                "value": "1,60217646(26)*10^−19 Дж",
+                "theme": "физика"
+            },
+            {
+                "name": "R∞",
+                "description": "Радиус сквозного пробега электрона",
+                "value": "2,817940289(11)*10^−15 м",
+                "theme": "физика"
+            },
+            {
+                "name": "ε0",
+                "description": "Диэлектрическая проницаемость вакуума",
+                "value": "8,854187817*10^−12 Ф/м",
+                "theme": "физика"
+            },
+            {
+                "name": "μ0",
+                "description": "Магнитная проницаемость вакуума",
+                "value": "1,2566370614*10^−6 Н/А^2",
+                "theme": "физика"
+            },
+            {
+                "name": "Z0",
+                "description": "Имpedance of free space",
+                "value": "376,730313461 Ом",
+                "theme": "физика"
+            },
+            {
+                "name": "RH",
+                "description": "Универсальная газовая постоянная (в химии)",
+                "value": "0,08205736608095(54) л*атм/моль*К",
+                "theme": "химия"
+            },
+            {
+                "name": "R",
+                "description": "Универсальная газовая постоянная (в химии)",
+                "value": "8,205736608095(54)*10^−5 м^3*атм/моль*К",
+                "theme": "химия"
+            },
+            {
+                "name": "k",
+                "description": "Постоянная Больцмана (в химии)",
+                "value": "1,3806504(24)*10^−23 Дж/К",
+                "theme": "химия"
+            }
+                    ];
+
+        const constantsList = document.getElementById('constantsList');
+
+        // Функция для отрисовки списка констант
+        function renderConstants(constants) {
+            constantsList.innerHTML = '';
+
+            constants.forEach(constant => {
+                const li = document.createElement('li');
+                li.style.cssText =`
+                    max-width:35%;
+                    `   
+                li.innerHTML = `
+                    <strong>Название:</strong> ${constant.name} <br>
+                    <strong>Значение:</strong> ${constant.value} <br>
+                    <strong>Описание:</strong> ${constant.description} <br>
+                    <strong>Тема:</strong> ${constant.theme} <br>
+                    <hr>
+                `;
+                constantsList.appendChild(li);
+            });
+        }
+
+        // Отрисовываем все константы при загрузке страницы
+        renderConstants(constants);
+
+        // Добавляем обработчик события для поля ввода
+        const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                // Фильтруем константы по поисковому запросу
+                const filteredConstants = constants.filter(constant =>
+                    Object.values(constant).some(value =>
+                        value.toString().toLowerCase().includes(searchTerm)
+                    )
+                );
+
+                // Отрисовываем отфильтрованные константы
+                renderConstants(filteredConstants);
+            });
+
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+
+            // Фильтруем константы по поисковому запросу
+
+        });
+
+
+    </script>
+{% endblock %}

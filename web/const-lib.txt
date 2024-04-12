@@ -1,0 +1,82 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+    <input type="text" id="searchInput" placeholder="Поиск...">
+    <ol id="constantsList">
+        <!-- Константы будут добавлены здесь -->
+    </ol>
+
+    <script>
+        const constants = [
+            {
+                "name": "g",
+                "value": "10m/s",
+                "description": "",
+                "theme": "математика",
+                "sub-theme": "астрологическая-таро-математика"
+            },
+            {
+                "name": "e",
+                "value": "100m/s",
+                "description": "",
+                "theme": "физика",
+                "sub-theme": "мемы"
+            },
+            {
+                "name": "pi",
+                "value": "10n/s",
+                "description": "",
+                "theme": "киберпук",
+                "sub-theme": "кибеееер пууук"
+            },
+            {
+                "name": "vi",
+                "value": "11dm/s",
+                "description": "",
+                "theme": "Биологие",
+                "sub-theme": "Психо-псих"
+            },
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const constantsList = document.getElementById('constantsList');
+
+        // Функция для отрисовки списка констант
+        function renderConstants(constants) {
+            constantsList.innerHTML = '';
+
+            constants.forEach(constant => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>Название:</strong> ${constant.name} <br>
+                    <strong>Значение:</strong> ${constant.value} <br>
+                    <strong>Описание:</strong> ${constant.description} <br>
+                    <strong>Тема:</strong> ${constant.theme} <br>
+                    <strong>Под-тема:</strong> ${constant["sub-theme"]}
+                    <hr style='max-width:25%;margin-left:-20px;'>
+                `;
+                constantsList.appendChild(li);
+            });
+        }
+
+        // Отрисовываем все константы при загрузке страницы
+        renderConstants(constants);
+
+        // Добавляем обработчик события для поля ввода
+        searchInput.addEventListener('input', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+
+            // Фильтруем константы по поисковому запросу
+            const filteredConstants = constants.filter(constant =>
+                constant.name.toLowerCase().includes(searchTerm) ||
+                constant.value.toLowerCase().includes(searchTerm) ||
+                constant.theme.toLowerCase().includes(searchTerm) ||
+                constant["sub-theme"].toLowerCase().includes(searchTerm)
+            );
+
+            // Отрисовываем отфильтрованные константы
+            renderConstants(filteredConstants);
+        });
+    </script>
+{% endblock %}

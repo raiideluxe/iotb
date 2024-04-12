@@ -1,0 +1,34 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Derivative Calculator</h1>
+    <form id="calculatorForm" action="/derivative-result" method="get">
+        <label for="latex_equation">Enter LaTeX equation:</label><br>
+        <input type="text" id="latex_equation" name="latex_equation" required><br>
+        <label for="variable">Enter variable:</label><br>
+        <input type="text" id="variable" name="variable" required><br>
+        <input type="submit" value="Calculate">
+    </form>
+    {% if latex_equation and variable %}
+        <h4>Производная от: <span class="katex-formula">{{ latex_equation }} d{{ variable }}</span></h4><br>
+        <h4>LaTeX Производная: <span class="katex-formula">{{ latex_derivative }}</span></h4>
+    {% endif %}
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+</div>
+
+<script>
+    // Функция для рендеринга формулы KaTeX
+    function renderKatexFormula(element) {
+        katex.render(element.textContent, element, { throwOnError: false });
+    }
+
+    // Рендеринг всех формул при загрузке страницы
+    window.onload = function() {
+        var katexFormulas = document.querySelectorAll('.katex-formula');
+        katexFormulas.forEach(renderKatexFormula);
+    };
+</script>
+{% endblock %}

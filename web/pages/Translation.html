@@ -1,0 +1,147 @@
+{% extends "index.html" %}
+
+{% block content %}
+<style>
+	.measure_select {
+		width:100%;
+		height: 250px;
+		max-height: 60%;
+		margin-top: 40px;
+	}
+	
+	.left_input {
+		box-sizing: border-box;
+		width: 100%;
+		text-align: right;
+		font-weight: bold;
+		font-size: 20px;
+		padding: 5px !important;
+	}
+	.right_input {
+		box-sizing: border-box;
+		width: 100%;
+		font-weight: bold;
+		font-size: 20px;
+		padding: 5px !important;
+	}
+	
+	#info1_short {
+		padding-left: 10px;
+	}
+	#info2_short {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.measure_info {
+		color: green;
+		padding: 10px;
+	}
+	</style>
+<div style="container">
+<form >
+	<input name="type" id="type" type="hidden" value="1">
+	
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	  <tbody><tr>
+		<td width="47%" align="left" valign="middle"><input name="inp1_2" id="inp1_2" type="text" maxlength="15" class="left_input"></td>
+		<td width="1%" id="info1_short"></td>
+		<td align="center" valign="middle" width="1%">&nbsp;&nbsp;==>&nbsp;&nbsp;</td>
+		<td width="47%" align="left" valign="middle"><input name="inp2_2" id="inp2_2" type="text" class="right_input"></td>
+		<td width="1%" id="info2_short"></td>
+	  </tr>
+	
+	  <tr>
+		<td colspan="2">
+	<select name="inp1_1" size="7" id="inp1_1" class="measure_select">
+	<option value="дюйм">дюйм</option><option value="сантиметр ">сантиметр </option><option value="ангстрем">ангстрем</option><option value="миллиметр">миллиметр</option><option value="дециметр">дециметр</option><option value="фут">фут</option><option value="аршин">аршин</option><option value="метр" selected="selected">метр</option><option value="километр">километр</option><option value="сажень">сажень</option><option value="верста">верста</option><option value="ярд">ярд</option><option value="миля">миля</option><option value="морская миля">морская миля</option><option value="кабельтов">кабельтов</option><option value="парсек">парсек</option><option value="световой год">световой год</option><option value="уставная миля">уставная миля</option><option value="фурлонг">фурлонг</option><option value="чейн">чейн</option><option value="род">род</option><option value="лье">лье</option><option value="микрон">микрон</option><option value="микрометр">микрометр</option><option value="вершок">вершок</option><option value="пядь">пядь</option><option value="линия">линия</option><option value="мил">мил</option><option value="точка">точка</option></select>
+		</td>
+		<td></td>
+		<td colspan="2">
+	<select name="inp2_1" id="inp2_1" size="7" class="measure_select">
+	<option value="точка">точка</option><option value="мил">мил</option><option value="линия">линия</option><option value="пядь">пядь</option><option value="вершок">вершок</option><option value="микрометр">микрометр</option><option value="микрон">микрон</option><option value="лье">лье</option><option value="род">род</option><option value="чейн">чейн</option><option value="фурлонг">фурлонг</option><option value="уставная миля">уставная миля</option><option value="световой год">световой год</option><option value="парсек">парсек</option><option value="кабельтов">кабельтов</option><option value="морская миля">морская миля</option><option value="миля">миля</option><option value="ярд">ярд</option><option value="верста">верста</option><option value="сажень">сажень</option><option value="километр">километр</option><option value="метр">метр</option><option value="аршин">аршин</option><option value="фут">фут</option><option value="дециметр">дециметр</option><option value="миллиметр">миллиметр</option><option value="ангстрем">ангстрем</option><option value="сантиметр " selected="selected">сантиметр </option><option value="дюйм">дюйм</option></select>
+		</td>
+	
+		<td colspan="2"></td>
+	  </tr>
+	</tbody></table>
+	</form> 
+</div>
+<script>
+// Определение соответствия единиц измерения и коэффициентов перевода
+const conversionFactors = {
+    "метр": 1,
+    "сантиметр ": 0.01,
+    "миллиметр": 0.001,
+    "микрометр": 0.000001,
+    "дюйм": 0.0254,
+    "фут": 0.3048,
+    "ярд": 0.9144,
+    "миля": 1609.34,
+    "аршин": 0.7112,
+    "фурлонг": 0.00497096,
+    "чейн": 20.1168,
+    "род": 5.0292,
+    "лье": 4.8728,
+    "микрон": 0.000001,
+    "вершок": 0.028,
+    "пядь": 0.1778,
+    "линия": 0.0021168,
+    "мил": 1609.34,
+    "точка": 0.0000352778,
+    "аршин": 0.7112,
+    "ангстрем": 0.0254,
+    "верста": 0.21,
+    "сажень": 1.8288,
+    "километр": 1000,
+    "аршин": 0.7112,
+    "фут": 0.3048,
+    "ярд": 0.9144,
+    "миля": 1609.34,
+    "морская миля": 1852,
+    "кабельтов": 185.2,
+    "парсек": 3.2484,
+    "световой год": 9.4607304725808e+15,
+    "уставная миля": 1609.347219,
+    "род": 5.0292,
+    "лье": 4.8728,
+    "микрон": 0.000001,
+    "вершок": 0.028,
+    "пядь": 0.1778,
+    "линия": 0.0021168,
+    "мил": 1609.34,
+    "точка": 0.0000352778
+};
+
+// Функция для конвертации величин
+function convertUnits() {
+    const input1 = document.getElementById("inp1_2");
+    const input2 = document.getElementById("inp2_2");
+    const select1 = document.getElementById("inp1_1");
+    const select2 = document.getElementById("inp2_1");
+
+    // Получение значений из формы
+    const value = parseFloat(input1.value);
+    const fromUnit = select1.value;
+    const toUnit = select2.value;
+
+    // Проверка на валидность значения
+    if (isNaN(value)) {
+        input2.value = '';
+        return;
+    }
+
+    // Конвертация величин
+    const fromFactor = conversionFactors[fromUnit];
+    const toFactor = conversionFactors[toUnit];
+    const result = (value * fromFactor) / toFactor;
+
+    // Вывод результата
+    input2.value = result.toFixed(2);
+}
+
+// Добавление обработчиков событий на изменение значений в полях ввода и на изменение выбранной единицы измерения в выпадающих списках
+document.getElementById("inp1_2").addEventListener("input", convertUnits);
+document.getElementById("inp1_1").addEventListener("change", convertUnits);
+document.getElementById("inp2_1").addEventListener("change", convertUnits);
+</script>
+{% endblock %}

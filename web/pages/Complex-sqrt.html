@@ -1,0 +1,66 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Вычисление корней комплексного числа</h2>
+    <form id="complexNumberForm" action="/complex-roots-result" method="get">
+        <label for="rootPower">Степень корня:</label>
+        <input id="rootPower" name="power" required><br>
+        <label for="realPart">Действительная часть:</label>
+        <textarea id="realPart" name="real" step="any" required></textarea><br>
+        <button type="submit">Отправить формулу</button>
+    </form>
+    <h3>Формула:</h3>
+    <div id="formulaDisplay"></div>
+    <h3>Результаты вычислений:</h3>
+    <ul id="resultsList">
+        {% for number, power, j  in history %}
+            <li>
+                Корни {{ power }}-й степени из {{ number }} =
+                <ol>
+                {% for root_1 in j %}
+                    <li class="katex-formula" style="">{{ root_1 }}</li>
+                {% endfor %}
+                </ol>
+                <hr style="width: 100%; color: gainsboro;">
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Add KaTeX to your HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"></script>
+
+<script>
+    // Функция для рендеринга формулы KaTeX
+    function renderKatexFormula(element) {
+        katex.render(element.textContent, element, { throwOnError: false });
+    }
+
+    // Рендеринг всех формул при загрузке страницы
+    window.onload = function() {
+        var katexFormulas = document.querySelectorAll('.katex-formula');
+        katexFormulas.forEach(renderKatexFormula);
+    };
+
+    // Function to update the formula display
+    function updateFormulaDisplay() {
+        var realPart = document.getElementById('realPart').value;
+        var rootPower = document.getElementById('rootPower').value;
+        var formula = '\\sqrt[' + rootPower + ']{' + realPart + '}';
+        var formulaDisplay = document.getElementById('formulaDisplay');
+        katex.render(formula, formulaDisplay, { throwOnError: false });
+    }
+
+    // Update the formula when the input changes
+    document.getElementById('realPart').addEventListener('input', updateFormulaDisplay);
+    document.getElementById('rootPower').addEventListener('input', updateFormulaDisplay);
+
+    // Update the results when the page loads
+    window.onload = function() {
+        updateFormulaDisplay();
+    };
+</script>
+{% endblock %}

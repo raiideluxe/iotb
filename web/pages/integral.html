@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Integral Calculator</h1>
+    <form id="calculatorForm" action="/integral-result" method="get">
+        <label for="latex_equation">Enter LaTeX equation:</label><br>
+        <input type="text" id="latex_equation" name="latex_equation" required><br>
+        <label for="variable">Enter variable:</label><br>
+        <input type="text" id="variable" name="variable" required><br>
+        <label for="int_range">Enter integration range (comma-separated):</label><br>
+        <input type="text" id="int_range" name="int_range"><br>
+        <input type="submit" value="Calculate">
+    </form>
+    {% if latex_equation and variable %}
+        <h2 class="katex-formula">{{ latex_equation }}</h2>
+        <p>LaTeX: <span class="katex-formula">{{ latex_integral }}</span></p>
+        {% if integral_numerical is not none %}
+            <p>Numerical Result over range {{ int_range }}: {{ integral_numerical }}</p>
+        {% endif %}
+    {% endif %}
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+</div>
+
+<script>
+    // Функция для рендеринга формулы KaTeX
+    function renderKatexFormula(element) {
+        katex.render(element.textContent, element, { throwOnError: false });
+    }
+
+    // Рендеринг всех формул при загрузке страницы
+    window.onload = function() {
+        var katexFormulas = document.querySelectorAll('.katex-formula');
+        katexFormulas.forEach(renderKatexFormula);
+    };
+</script>
+{% endblock %}

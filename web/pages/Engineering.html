@@ -1,0 +1,72 @@
+<!-- templates/pages/Engineering.html -->
+
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Инженерный калькулятор</h2>
+    <p>
+        Функции: инженерный калькулятор содержит большой набор математических функций, 
+        таких как синус, косинус, тангенс, логарифмы и др. 
+        Это позволяет инженерам и техникам выполнять сложные вычисления, необходимые для решения задач.
+    </p>
+    <form id="calculatorForm" action="/engineering-result" method="get">
+        <textarea id="formulaInput" name="formula" placeholder="Введите формулу" oninput="updateFormula()"></textarea>
+        <button type="submit">Вычислить</button>
+    </form>
+    <div id="formulaOutput"></div>
+    <h3>История вычислений:</h3>
+    <ul>
+        {% for formula, result in history %}
+            <li style="display: flex; align-items: center; flex-wrap: wrap;">
+                <span class="katex-formula" style="font-size: smaller;">{{ formula }} </span> = <span class="katex-result"> {{ result }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Добавьте KaTeX в ваш HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"></script>
+
+<script>
+    function updateFormula() {
+        var input = document.getElementById('formulaInput').value;
+        katex.render(input, document.getElementById('formulaOutput'), {
+            throwOnError: false,
+            displayMode: true
+        });
+    }
+    function renderKatexInHistory() {
+        var historyItems = document.querySelectorAll('.katex-formula');
+        var historyItemsResult = document.querySelectorAll('.katex-result');
+        historyItems.forEach(function(item) {
+            katex.render(item.textContent, item, {
+                throwOnError: false,
+                displayMode: true
+            });
+        });
+        historyItemsResult.forEach(function(item) {
+            katex.render(item.textContent, item, {
+                throwOnError: false,
+                displayMode: true
+            });
+        });
+    }
+    document.getElementById("calculatorForm").addEventListener("submit", function(event) {
+    var formula = document.getElementById("formulaInput").value;
+    if (formula.trim() === "") {
+        event.preventDefault();
+        alert("Формула не может быть пустой!");
+    }
+    });
+    window.onload = function() {
+        updateFormula();
+        renderKatexInHistory();
+    };
+
+
+    
+</script>
+{% endblock %}

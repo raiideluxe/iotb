@@ -1,0 +1,51 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Найти смешаное произведение векторов</h2>
+    <form id="calculatorForm" action="/vector-mixed-multiply-result" method="get">
+        <div id="equationInputs">
+            <!-- Изначально два поля ввода -->
+            <input type="text" name="equation1" placeholder="Уравнение 1" style="width: 80%;">
+            <input type="text" name="equation2" placeholder="Уравнение 2" style="width: 80%;">
+        </div>
+        <button type="button" id="addEquation">Добавить уравнение</button>
+        <button type="submit">Решить систему</button>
+    </form>
+    <div id="formulaOutput">
+        <h3>Вектора:</h3>
+            <div class="katex-formula">{{ condition }}</div>
+        <h3>Скалярное произведение двух векторов:</h3>
+        <div id="solution" class="katex-formula">{{ result }}</div>
+    </div>
+</div>
+
+<!-- Add KaTeX to your HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"></script>
+
+<script>
+    // Функция для рендеринга формулы KaTeX
+    function renderKatexFormula(element) {
+        katex.render(element.textContent, element, { throwOnError: false });
+    }
+
+    // Рендеринг всех формул при загрузке страницы
+    window.onload = function() {
+        var katexFormulas = document.querySelectorAll('.katex-formula');
+        katexFormulas.forEach(renderKatexFormula);
+    };
+
+    // Добавление нового поля ввода для уравнения
+    document.getElementById('addEquation').addEventListener('click', function() {
+        var equationInputs = document.getElementById('equationInputs');
+        var newInput = document.createElement('input');
+        newInput.type = 'text';
+        newInput.name = 'equation' + (equationInputs.childElementCount + 1);
+        newInput.placeholder = 'Уравнение ' + (equationInputs.childElementCount + 1);
+        newInput.style.width = '80%';
+        equationInputs.appendChild(newInput);
+    });
+</script>
+{% endblock %}

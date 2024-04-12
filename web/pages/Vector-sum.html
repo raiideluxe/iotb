@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Сложить два вектора</h2>
+    <form id="calculatorForm" action="/vector-sum-result" method="get">
+        <div id="equationInputs">
+            <!-- Изначально два поля ввода -->
+            <input type="text" name="equation1" placeholder="1 Вектор(введите значения через запятую)" style="width: 80%; margin-bottom: 10px;">
+            <input type="text" name="equation2" placeholder="2 Вектор(введите значения через запятую)" style="width: 80%;">
+        </div>
+        <button type="submit">Сложить вектора</button>
+    </form>
+    <div id="formulaOutput">
+        <h3>Вектора:</h3>
+            <div class="katex-formula">{{ condition }}</div>
+        <h3>Сложение двух векторов:</h3>
+        <div id="solution" class="katex-formula">{{ result }}</div>
+    </div>
+</div>
+
+<!-- Add KaTeX to your HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"></script>
+
+<script>
+    // Функция для рендеринга формулы KaTeX
+    function renderKatexFormula(element) {
+        katex.render(element.textContent, element, { throwOnError: false });
+    }
+
+    // Рендеринг всех формул при загрузке страницы
+    window.onload = function() {
+        var katexFormulas = document.querySelectorAll('.katex-formula');
+        katexFormulas.forEach(renderKatexFormula);
+    };
+</script>
+{% endblock %}

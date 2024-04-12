@@ -1,0 +1,171 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+        });
+    </script>
+    <style>
+        .container {
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        #formulaInput {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #formulaOutput {
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        h3 {
+            margin-top: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+    <body>
+        <div class="menu-container">
+            <div class="menu" id="nav-menu">
+                <a href="/engineering">Инженерный калькулятор</a>
+
+                <div class="dropdown">
+                    <a href="/help">Комплексные числа</a>
+                    <div class="dropdown-content">
+                        <a href="/complex-roots">Извелечь корень</a>
+                        <a href="/engineering-result">Возвести в степень</a>
+                        <a href="/engineering-result">Кч в полярных координатах</a>
+                        <!-- Добавьте другие ссылки для выпадающего списка -->
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <a href="/help">Матрицы</a>
+                    <div class="dropdown-content">
+                        <a href="/matrix-determinant">Найти определитель</a>
+                        <a href="/matrix-inv">Найти обратную матрицу</a>
+                        <a href="/matrix-rank">Найти ранг матрицы</a>
+                        <a href="/matrix-transpose">Транспонировать</a>
+                        <a href="/matrix-solution">Решить систему уравнений</a>
+                        <!-- Добавьте другие ссылки для выпадающего списка -->
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <a href="/help">Вектора</a>
+                    <div class="dropdown-content">
+                        <a href="/vector-sum">Сложить два вектора</a>
+                        <a href="/vector-length">Найти длину вектора</a>
+                        <a href="/vector-direction">Найти направляющие вектора</a>
+                        <a href="/vector-multiply">Векторное произведение</a>
+                        <a href="/vector-scalar">Скалярное произведение</a>
+                        <a href="/vector-mixed-multiply">Смешанное произведение</a>
+                        <!-- Добавьте другие ссылки для выпадающего списка -->
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <a href="/help">Дифференциал интеграл</a>
+                    <div class="dropdown-content">
+                        <a href="/derivative">Найти производную</a>
+                        <a href="/integral">Найти интеграл</a>
+                        <!-- Добавьте другие ссылки для выпадающего списка -->
+                    </div>
+                </div>
+                
+                <div class="dropdown">
+                    <a href="/help">Другое</a>
+                    <div class="dropdown-content">
+                        <a href="/ploter-2d">Построить фигуру в 2D</a>
+                        <a href="/ploter-2d">Построить фигуру в 3D</a>
+                        <a href="/translation">Перевод в другие величины</a>
+                        <a href="/constants-lib">Библиотека констант</a>
+                        <a href="/help">Помощь</a>
+                        <!-- Добавьте другие ссылки для выпадающего списка -->
+                    </div>
+                </div>
+
+                
+                
+            </div>
+            <div class="burger-menu hidden" id="burger-menu">
+                <!-- ... -->
+                <a href="#" onclick="showCalculator('menu')">Menu</a>
+
+            </div>
+        </div>
+
+        <div id="content-container" class="calculator">
+                {% block content %}
+                <!-- Здесь будут вставляться компоненты калькулятора -->
+                {% endblock %}
+            </div>
+        <div>
+            {% block ploter %}
+            <!-- Здесь будут вставляться компоненты калькулятора -->
+            {% endblock %}
+        </div>
+    </body>
+
+    <script>
+        function showCalculator(id) {
+            var menu = document.getElementById('nav-menu');
+            var burgerMenu = document.getElementById('burger-menu');
+
+            menu.classList.add('hidden');
+            burgerMenu.classList.remove('hidden');
+
+            if(id=='menu'){
+                menu.classList.remove('hidden');
+                burgerMenu.classList.add('hidden');
+            } 
+                
+        
+
+        }
+
+    </script>
+
+
+</html>

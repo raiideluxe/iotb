@@ -1,0 +1,59 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Инженерный калькулятор</h2>
+    <p>
+        Функции: инженерный калькулятор содержит большой набор математических функций, 
+        таких как синус, косинус, тангенс, логарифмы и др. 
+        Это позволяет инженерам и техникам выполнять сложные вычисления, необходимые для решения задач.
+    </p>
+    <form id="calculatorForm" action="/matrix-inv-result" method="get">
+        <textarea id="matrixInput" name="matrix" placeholder="Введите матрицу"></textarea>
+        <button type="submit">Вычислить обратную матрицу</button>
+    </form>
+    <div id="formulaOutput">
+        {% if inv_latex %}
+            <p>Обратная матрица:</p>
+            <div id="invMatrix" class="katex-formula">{{ inv_latex }}</div>
+        {% endif %}
+    </div>
+    <h3>История вычислений:</h3>
+</div>
+
+<!-- Add KaTeX to your HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"></script>
+
+<script>
+    // Функция для рендеринга формулы KaTeX
+    function renderKatexFormula(element) {
+        katex.render(element.textContent, element, { throwOnError: false });
+    }
+
+    // Рендеринг всех формул при загрузке страницы
+    window.onload = function() {
+        var katexFormulas = document.querySelectorAll('.katex-formula');
+        katexFormulas.forEach(renderKatexFormula);
+    };
+
+    // Function to update the formula display
+    function updateFormulaDisplay() {
+        var realPart = document.getElementById('realPart').value;
+        var rootPower = document.getElementById('rootPower').value;
+        var formula = '\\sqrt[' + rootPower + ']{' + realPart + '}';
+        var formulaDisplay = document.getElementById('formulaDisplay');
+        katex.render(formula, formulaDisplay, { throwOnError: false });
+    }
+
+    // Update the formula when the input changes
+    document.getElementById('realPart').addEventListener('input', updateFormulaDisplay);
+    document.getElementById('rootPower').addEventListener('input', updateFormulaDisplay);
+
+    // Update the results when the page loads
+    window.onload = function() {
+        updateFormulaDisplay();
+    };
+</script>
+{% endblock %}
